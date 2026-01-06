@@ -1,0 +1,162 @@
+/* SafePrescribe Application Styles */
+
+.App {
+  text-align: left;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Table styles */
+.MuiTableContainer-root {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.MuiTableRow-root:hover {
+  background-color: rgba(25, 118, 210, 0.04);
+}
+
+/* Card styles */
+.MuiCard-root {
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.MuiCard-root:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Button styles */
+.MuiButton-root {
+  border-radius: 8px;
+  text-transform: none;
+  font-weight: 500;
+}
+
+/* Dialog styles */
+.MuiDialog-paper {
+  border-radius: 12px;
+}
+
+/* Chip styles */
+.MuiChip-root {
+  border-radius: 16px;
+}
+
+/* Form field styles */
+.MuiTextField-root .MuiOutlinedInput-root {
+  border-radius: 8px;
+}
+
+/* Navigation styles */
+.MuiAppBar-root {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .MuiContainer-root {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  
+  .MuiCard-root {
+    margin-bottom: 16px;
+  }
+}
+
+/* Animation for page transitions */
+.page-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.page-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-exit-active {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* Custom focus styles */
+.MuiButton-root:focus-visible,
+.MuiIconButton-root:focus-visible {
+  outline: 2px solid #1976d2;
+  outline-offset: 2px;
+}
+
+/* Loading states */
+.loading-skeleton {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Status indicators */
+.status-active {
+  background-color: #4caf50;
+  color: white;
+}
+
+.status-warning {
+  background-color: #ff9800;
+  color: white;
+}
+
+.status-error {
+  background-color: #f44336;
+  color: white;
+}
+
+/* Print styles */
+@media print {
+  .MuiAppBar-root,
+  .MuiButton-root,
+  .MuiIconButton-root {
+    display: none !important;
+  }
+  
+  .MuiPaper-root {
+    box-shadow: none !important;
+    border: 1px solid #ddd;
+  }
+}

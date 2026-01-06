@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prescription</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            color: #333;
+            line-height: 1.4;
+            font-size: 12px;
+        }
+        
+        .prescription-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            position: relative;
+        }
+        
+        /* Header Section */
+        .header-section {
+            background: white;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header-top {
+            display: table;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        
+        .doctor-info {
+            display: table-cell;
+            width: 40%;
+            vertical-align: top;
+        }
+        
+        .doctor-name {
+            color: #0891b2;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .doctor-details {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 3px;
+        }
+        
+        .barcode {
+            width: 80px;
+            height: 20px;
+            background: repeating-linear-gradient(
+                90deg,
+                #000 0px,
+                #000 2px,
+                transparent 2px,
+                transparent 4px
+            );
+            margin-top: 5px;
+        }
+        
+        .logo-section {
+            display: table-cell;
+            width: 20%;
+            text-align: center;
+            vertical-align: top;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: #0891b2;
+            color: white;
+            display: inline-block;
+            text-align: center;
+            line-height: 60px;
+            font-weight: bold;
+            font-size: 14px;
+            margin: 0 auto 10px;
+        }
+        
+        .patient-info {
+            display: table-cell;
+            width: 40%;
+            text-align: right;
+            vertical-align: top;
+        }
+        
+        .patient-id {
+            color: #0891b2;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .patient-details {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 3px;
+        }
+        
+        /* Blue band section */
+        .blue-band {
+            background: #0891b2;
+            color: white;
+            padding: 8px 20px;
+            display: table;
+            width: 100%;
+        }
+        
+        .blue-band-left {
+            display: table-cell;
+            width: 50%;
+        }
+        
+        .blue-band-right {
+            display: table-cell;
+            width: 50%;
+            text-align: right;
+        }
+        
+        /* Main content section */
+        .main-content {
+            padding: 20px;
+            background: white;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .content-grid {
+            display: table;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        
+        .patient-demo {
+            display: table-cell;
+            width: 30%;
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            vertical-align: top;
+        }
+        
+        .demo-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .demo-value {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .medications-section {
+            display: table-cell;
+            width: 70%;
+            padding-left: 20px;
+            vertical-align: top;
+        }
+        
+        .medications-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .medications-table th {
+            background: #f1f5f9;
+            color: #0891b2;
+            font-weight: bold;
+            font-size: 12px;
+            padding: 10px 8px;
+            text-align: left;
+            border-right: 1px solid #e2e8f0;
+        }
+        
+        .medications-table th:last-child {
+            border-right: none;
+        }
+        
+        .medications-table td {
+            padding: 8px;
+            font-size: 11px;
+            border-bottom: 1px solid #e2e8f0;
+            border-right: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        
+        .medications-table td:last-child {
+            border-right: none;
+        }
+        
+        .medications-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .med-name {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .med-dosage {
+            color: #666;
+        }
+        
+        .med-duration {
+            color: #666;
+        }
+        
+        /* Footer section */
+        .footer-section {
+            background: white;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .footer-content {
+            display: table;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        .advice-section {
+            display: table-cell;
+            width: 50%;
+            vertical-align: top;
+        }
+        
+        .advice-section h3 {
+            color: #0891b2;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .advice-text {
+            font-size: 12px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .signature-section {
+            display: table-cell;
+            width: 50%;
+            text-align: right;
+            vertical-align: top;
+        }
+        
+        .signature-section h3 {
+            color: #0891b2;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .signature-line {
+            width: 150px;
+            height: 1px;
+            background: #333;
+            margin: 20px 0 5px auto;
+        }
+        
+        .doctor-signature {
+            font-size: 12px;
+            color: #333;
+            margin-bottom: 3px;
+        }
+        
+        .doctor-designation {
+            font-size: 11px;
+            color: #666;
+        }
+        
+        .footer-band {
+            background: #0891b2;
+            height: 8px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="prescription-container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <div class="header-top">
+                <div class="doctor-info">
+                    <div class="doctor-name">DR. {{ prescription.prescriber.first_name|upper }} {{ prescription.prescriber.last_name|upper }}</div>
+                    <div class="doctor-details">{{ prescription.prescriber.designation|default:"General Practitioner" }}</div>
+                    <div class="doctor-details">Mobile: {{ prescription.prescriber.phone|default:"xxx-000-xxxx" }}</div>
+                    <div class="barcode"></div>
+                </div>
+                
+                <div class="logo-section">
+                    <div class="logo">LOGO</div>
+                </div>
+                
+                <div class="patient-info">
+                    <div class="patient-id">ID: {{ prescription.patient.id }} - {{ prescription.patient.first_name|upper }} {{ prescription.patient.last_name|upper }} ({{ prescription.patient.gender|upper }})</div>
+                    <div class="patient-details">Address: {{ prescription.patient.address|truncatechars:30 }}</div>
+                    <div class="patient-details">Temp (deg): 36, BP: 120/80 mmHg</div>
+                    <div class="patient-details">Phone: {{ prescription.patient.phone|default:"000-xxx-0000" }}</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Blue band -->
+        <div class="blue-band">
+            <div class="blue-band-left">AM - 2PM | Closed: Friday</div>
+            <div class="blue-band-right">Date: {{ prescription.prescribed_date|date:"d M Y" }}</div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="content-grid">
+                <div class="patient-demo">
+                    <div class="demo-label">AGE:</div>
+                    <div class="demo-value">{{ patient_age }} years</div>
+                    
+                    <div class="demo-label">GENDER:</div>
+                    <div class="demo-value">{{ prescription.patient.gender|upper }}</div>
+                    
+                    <div class="demo-label">ADM:</div>
+                    <div class="demo-value">{{ prescription.prescribed_date|date:"d/m/Y" }}</div>
+                </div>
+                
+                <div class="medications-section">
+                    <table class="medications-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 40%;">Medicine Name</th>
+                                <th style="width: 35%;">Dosage</th>
+                                <th style="width: 25%;">Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for med in medications %}
+                            <tr>
+                                <td class="med-name">{{ forloop.counter }}) {{ med.drug.name|upper }}</td>
+                                <td class="med-dosage">{{ med.dosage }}</td>
+                                <td class="med-duration">{{ med.duration }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" style="text-align: center; color: #999; font-style: italic;">No medications prescribed</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer Section -->
+        <div class="footer-section">
+            <div class="footer-content">
+                <div class="advice-section">
+                    <h3>Advice Given:</h3>
+                    <div class="advice-text">
+                        {% if prescription.instructions %}
+                            {{ prescription.instructions }}
+                        {% else %}
+                            *Avoid Oily And Spicy Food
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="signature-section">
+                    <h3>Signature</h3>
+                    <div class="signature-line"></div>
+                    <div class="doctor-signature">Dr. {{ prescription.prescriber.first_name }} {{ prescription.prescriber.last_name }}</div>
+                    <div class="doctor-designation">{{ prescription.prescriber.designation|default:"General Practitioner" }}</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer band -->
+        <div class="footer-band"></div>
+    </div>
+</body>
+</html>

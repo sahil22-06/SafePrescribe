@@ -1,0 +1,27 @@
+name,generic_name,strength,form,category,manufacturer,dosage_instructions,side_effects,contraindications,interactions,availability,price,therapeutic_class
+Tylenol,Acetaminophen,500mg,tablet,Analgesic,Johnson & Johnson,Take 1-2 tablets every 4-6 hours as needed,Nausea in high doses,Liver disease,Warfarin,available,5.99,Analgesic
+Advil,Ibuprofen,200mg,tablet,NSAID,Pfizer,Take 1-2 tablets every 6 hours with food,Stomach upset; heartburn,Stomach ulcers; kidney disease,Aspirin; Warfarin,available,7.50,NSAID
+Amoxicillin,Amoxicillin,250mg,capsule,Antibiotic,BioMed,Take 1 capsule every 8 hours,Rash; diarrhea,Penicillin allergy,Methotrexate,available,12.00,Antibiotic
+Augmentin,Amoxicillin/Clavulanate,875mg,tablet,Antibiotic,GlaxoSmithKline,Take 1 tablet twice daily with food,Diarrhea; nausea,Penicillin allergy; liver disease,Warfarin; Allopurinol,available,18.50,Antibiotic
+Lisinopril,Lisinopril,10mg,tablet,ACE Inhibitor,Merck,Take 1 tablet daily,Dry cough; dizziness,Pregnancy; kidney disease,Potassium supplements,available,8.25,Antihypertensive
+Amlodipine,Amlodipine,5mg,tablet,Calcium Channel Blocker,Pfizer,Take 1 tablet daily,Ankle swelling; dizziness,Severe heart disease,Simvastatin,available,6.75,Antihypertensive
+Metformin,Metformin,500mg,tablet,Antidiabetic,Novartis,Take 1 tablet twice daily with meals,Stomach upset; diarrhea,Kidney disease; heart failure,Alcohol; contrast dye,available,15.50,Antidiabetic
+Insulin,Insulin Human,100 units/ml,injection,Antidiabetic,Novo Nordisk,Inject as directed by physician,Low blood sugar; injection site reactions,Hypoglycemia,Beta-blockers; alcohol,available,45.00,Antidiabetic
+Albuterol,Albuterol,90mcg,inhaler,Bronchodilator,GlaxoSmithKline,2 puffs every 4-6 hours as needed,Tremor; rapid heartbeat,Heart rhythm problems,Beta-blockers,available,25.00,Bronchodilator
+Fluticasone,Fluticasone,44mcg,inhaler,Corticosteroid,GlaxoSmithKline,2 puffs twice daily,Throat irritation; hoarseness,Fungal infections,Ritonavir,available,35.00,Anti-inflammatory
+Atorvastatin,Atorvastatin,20mg,tablet,Statin,Pfizer,Take 1 tablet at bedtime,Muscle pain; liver problems,Liver disease; pregnancy,Cyclosporine; gemfibrozil,available,22.75,Statin
+Simvastatin,Simvastatin,40mg,tablet,Statin,Merck,Take 1 tablet at bedtime,Muscle pain; liver problems,Liver disease; pregnancy,Amlodipine; diltiazem,available,19.25,Statin
+Prednisone,Prednisone,5mg,tablet,Corticosteroid,Roxane,Take as directed by physician,Weight gain; mood changes,Fungal infections; live vaccines,Warfarin; diuretics,available,6.50,Anti-inflammatory
+Hydrochlorothiazide,Hydrochlorothiazide,25mg,tablet,Diuretic,Mylan,Take 1 tablet daily in morning,Dizziness; frequent urination,Kidney disease; gout,Lithium; digoxin,available,4.00,Diuretic
+Furosemide,Furosemide,40mg,tablet,Diuretic,Sanofi,Take 1 tablet daily in morning,Dehydration; low potassium,Kidney disease; hearing problems,Lithium; aminoglycosides,available,5.25,Diuretic
+Omeprazole,Omeprazole,20mg,capsule,Proton Pump Inhibitor,AstraZeneca,Take 1 capsule before breakfast,Headache; stomach pain,Liver disease,Warfarin; digoxin,available,18.00,Proton Pump Inhibitor
+Pantoprazole,Pantoprazole,40mg,tablet,Proton Pump Inhibitor,Wyeth,Take 1 tablet before breakfast,Headache; diarrhea,Liver disease,Warfarin; atazanavir,available,16.50,Proton Pump Inhibitor
+Sertraline,Sertraline,50mg,tablet,SSRI,Pfizer,Take 1 tablet daily,Nausea; drowsiness,MAO inhibitors; pregnancy,MAO inhibitors; tramadol,available,28.00,Antidepressant
+Escitalopram,Escitalopram,10mg,tablet,SSRI,Forest Labs,Take 1 tablet daily,Nausea; dizziness,MAO inhibitors; pregnancy,MAO inhibitors; NSAIDs,available,24.50,Antidepressant
+Lorazepam,Lorazepam,1mg,tablet,Benzodiazepine,Wyeth,Take as directed by physician,Drowsiness; confusion,Respiratory depression; pregnancy,Alcohol; opioids,available,12.75,Anxiolytic
+Alprazolam,Alprazolam,0.5mg,tablet,Benzodiazepine,Pfizer,Take as directed by physician,Drowsiness; memory problems,Respiratory depression; pregnancy,Alcohol; opioids,available,15.25,Anxiolytic
+Warfarin,Warfarin,5mg,tablet,Anticoagulant,Bristol Myers,Take as directed with regular monitoring,Bleeding; bruising,Active bleeding; pregnancy,NSAIDs; antibiotics,available,8.50,Anticoagulant
+Aspirin,Aspirin,81mg,tablet,Antiplatelet,Bayer,Take 1 tablet daily with food,Stomach irritation; bleeding,Active bleeding; allergy,Warfarin; ibuprofen,available,3.25,Antiplatelet
+Clopidogrel,Clopidogrel,75mg,tablet,Antiplatelet,Sanofi,Take 1 tablet daily,Bleeding; rash,Active bleeding; severe liver disease,Proton pump inhibitors,available,32.00,Antiplatelet
+Levothyroxine,Levothyroxine,50mcg,tablet,Thyroid Hormone,Abbott,Take 1 tablet on empty stomach,Heart palpitations; nervousness,Hyperthyroidism; adrenal insufficiency,Iron; calcium,available,11.75,Thyroid Hormone
+
