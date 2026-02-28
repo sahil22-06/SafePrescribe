@@ -32,11 +32,11 @@ const DoctorDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [currentPatient, setCurrentPatient] = useState(null);
-  
+
   // Dialog states
   const [patientDialog, setPatientDialog] = useState(false);
   const [prescriptionDialog, setPrescriptionDialog] = useState(false);
-  
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -52,9 +52,9 @@ const DoctorDashboard = () => {
       navigate('/clinic/login');
       return;
     }
-    
+
     fetchData();
-    
+
     // Auto-refresh every 30 seconds
     const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
@@ -63,28 +63,28 @@ const DoctorDashboard = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      
+
       // Fetch doctor's queue
-      const queueResponse = await fetch(`http://localhost:8000/api/clinic/queue/?doctor=${user?.id}`, {
+      const queueResponse = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8000/api'}/clinic/queue/?doctor=${user?.id}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
           'Content-Type': 'application/json'
         }
       });
-      
+
       if (queueResponse.ok) {
         const queueData = await queueResponse.json();
         setQueue(queueData.results || queueData);
       }
-      
+
       // Fetch doctor's appointments
-      const appointmentsResponse = await fetch('http://localhost:8000/api/clinic/appointments/', {
+      const appointmentsResponse = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8000/api'}/clinic/appointments/`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
           'Content-Type': 'application/json'
         }
       });
-      
+
       if (appointmentsResponse.ok) {
         const appointmentsData = await appointmentsResponse.json();
         // Filter to show only current doctor's appointments
@@ -93,7 +93,7 @@ const DoctorDashboard = () => {
         );
         setAppointments(doctorAppointments);
       }
-      
+
       setError('');
     } catch (err) {
       console.error('Error fetching data:', err);
@@ -114,7 +114,7 @@ const DoctorDashboard = () => {
 
   const handleStartConsultation = async (appointment) => {
     try {
-      const response = await fetch(`http://localhost:8000/api/clinic/appointments/${appointment.id}/status/`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8000/api'}/clinic/appointments/${appointment.id}/status/`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
@@ -142,7 +142,7 @@ const DoctorDashboard = () => {
 
   const handleCompleteConsultation = async (appointment) => {
     try {
-      const response = await fetch(`http://localhost:8000/api/clinic/appointments/${appointment.id}/status/`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8000/api'}/clinic/appointments/${appointment.id}/status/`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
@@ -170,7 +170,7 @@ const DoctorDashboard = () => {
 
   const handleRemoveFromQueue = async (queueId) => {
     try {
-      const response = await fetch('http://localhost:8000/api/clinic/queue/remove/', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8000/api'}/clinic/queue/remove/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
@@ -232,7 +232,7 @@ const DoctorDashboard = () => {
               </Typography>
             </Box>
           </Box>
-          
+
           <Box sx={{ display: 'flex', gap: 2 }}>
             <Button
               variant="outlined"
@@ -375,7 +375,7 @@ const DoctorDashboard = () => {
                   Patient Queue ({queue.length})
                 </Typography>
               </Box>
-              
+
               {queue.length === 0 ? (
                 <Box sx={{ p: 4, textAlign: 'center' }}>
                   <ScheduleIcon sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
@@ -460,7 +460,7 @@ const DoctorDashboard = () => {
               <Typography variant="h6" fontWeight="bold" sx={{ mb: 3 }}>
                 Quick Actions
               </Typography>
-              
+
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <Button
                   variant="contained"
@@ -472,7 +472,7 @@ const DoctorDashboard = () => {
                 >
                   Write Prescription
                 </Button>
-                
+
                 <Button
                   variant="outlined"
                   startIcon={<MedicationIcon />}
@@ -482,7 +482,7 @@ const DoctorDashboard = () => {
                 >
                   Check Medications
                 </Button>
-                
+
                 <Button
                   variant="outlined"
                   startIcon={<RefreshIcon />}
@@ -549,9 +549,9 @@ const DoctorDashboard = () => {
                   />
                 </Grid>
               </Grid>
-              
+
               <Divider sx={{ my: 3 }} />
-              
+
               <Typography variant="h6" sx={{ mb: 2 }}>
                 Consultation Notes
               </Typography>
@@ -562,7 +562,7 @@ const DoctorDashboard = () => {
                 placeholder="Enter consultation notes, diagnosis, and treatment plan..."
                 sx={{ mb: 2 }}
               />
-              
+
               <Typography variant="h6" sx={{ mb: 2 }}>
                 Diagnosis
               </Typography>

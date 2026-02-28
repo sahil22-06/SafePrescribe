@@ -33,11 +33,11 @@ const ReceptionistDashboard = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [refreshProgress, setRefreshProgress] = useState(0);
   const [showUpdateNotification, setShowUpdateNotification] = useState(false);
-  
+
   // Dialog states
   const [patientDialog, setPatientDialog] = useState(false);
   const [appointmentDialog, setAppointmentDialog] = useState(false);
-  
+
   // Form states
   const [patientForm, setPatientForm] = useState({
     first_name: '',
@@ -57,7 +57,7 @@ const ReceptionistDashboard = () => {
     pregnancy_status: false,
     breastfeeding: false
   });
-  
+
   const [appointmentForm, setAppointmentForm] = useState({
     patient: '',
     doctor: '',
@@ -66,7 +66,7 @@ const ReceptionistDashboard = () => {
     reason: '',
     priority: 3
   });
-  
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -83,14 +83,14 @@ const ReceptionistDashboard = () => {
       navigate('/reception-portal');
       return;
     }
-    
+
     fetchData();
-    
+
     // Set up auto-refresh every 30 seconds to show real-time status updates
     const interval = setInterval(() => {
       fetchData(true); // Silent refresh
     }, 30000); // Refresh every 30 seconds
-    
+
     return () => clearInterval(interval);
   }, [navigate]);
 
@@ -103,46 +103,46 @@ const ReceptionistDashboard = () => {
         setIsRefreshing(true);
         setRefreshProgress(0);
       }
-      
+
       // Simulate progress for better UX
       const progressInterval = setInterval(() => {
         setRefreshProgress(prev => Math.min(prev + 10, 90));
       }, 100);
-      
+
       // Fetch appointments
-      const appointmentsResponse = await fetch('http://localhost:8000/api/clinic/appointments/', {
+      const appointmentsResponse = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8000/api'}/clinic/appointments/`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
           'Content-Type': 'application/json'
         }
       });
-      
+
       if (appointmentsResponse.ok) {
         const appointmentsData = await appointmentsResponse.json();
         setAppointments(appointmentsData.results || appointmentsData);
       }
-      
+
       // Fetch patients
-      const patientsResponse = await fetch('http://localhost:8000/api/patients/', {
+      const patientsResponse = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8000/api'}/patients/`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
           'Content-Type': 'application/json'
         }
       });
-      
+
       if (patientsResponse.ok) {
         const patientsData = await patientsResponse.json();
         setPatients(patientsData.results || patientsData);
       }
-      
+
       // Fetch doctors only
-      const doctorsResponse = await fetch('http://localhost:8000/api/users/?role=doctor', {
+      const doctorsResponse = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8000/api'}/users/?role=doctor`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
           'Content-Type': 'application/json'
         }
       });
-      
+
       if (doctorsResponse.ok) {
         const doctorsData = await doctorsResponse.json();
         const list = doctorsData.results || doctorsData;
@@ -151,29 +151,29 @@ const ReceptionistDashboard = () => {
           const savedId = localStorage.getItem('preferredDoctorId');
           let preferredId = savedId && list.find(d => String(d.id) === String(savedId)) ? savedId : '';
           if (!preferredId) {
-            const match = list.find(d => `${(d.first_name||'').toLowerCase()} ${(d.last_name||'').toLowerCase()}`.includes('sahil'));
+            const match = list.find(d => `${(d.first_name || '').toLowerCase()} ${(d.last_name || '').toLowerCase()}`.includes('sahil'));
             if (match) preferredId = String(match.id);
           }
           if (preferredId) {
             setAppointmentForm(prev => ({ ...prev, doctor: preferredId }));
           }
-        } catch (_) {}
+        } catch (_) { }
       }
-      
+
       // Complete progress
       clearInterval(progressInterval);
       setRefreshProgress(100);
-      
+
       // Update last updated timestamp
       const updateTime = new Date();
       setLastUpdated(updateTime);
-      
+
       // Show subtle update notification for silent refreshes
       if (silent) {
         setShowUpdateNotification(true);
         setTimeout(() => setShowUpdateNotification(false), 2000);
       }
-      
+
     } catch (err) {
       console.error('Error fetching data:', err);
       if (!silent) {
@@ -204,7 +204,7 @@ const ReceptionistDashboard = () => {
         { key: 'phone', label: 'Phone Number' },
         { key: 'address', label: 'Address' }
       ];
-      
+
       // Critical medical fields that should be filled for patient safety
       const criticalFields = [
         { key: 'blood_group', label: 'Blood Group' },
@@ -216,7 +216,7 @@ const ReceptionistDashboard = () => {
         toast.error(`Please fill: ${missing.map(m => m.label).join(', ')}`);
         return;
       }
-      
+
       // Check critical medical fields and warn if missing
       const missingCritical = criticalFields.filter(f => !String(patientForm[f.key] || '').trim());
       if (missingCritical.length) {
@@ -270,7 +270,7 @@ const ReceptionistDashboard = () => {
               message = `${firstKey}: ${firstVal}`;
             }
           }
-        } catch (_) {}
+        } catch (_) { }
         toast.error(message);
       }
     } catch (err) {
@@ -300,7 +300,7 @@ const ReceptionistDashboard = () => {
         priority: parseInt(appointmentForm.priority)
       };
 
-      const response = await fetch('http://localhost:8000/api/clinic/appointments/', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8000/api'}/clinic/appointments/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
@@ -389,7 +389,7 @@ const ReceptionistDashboard = () => {
   return (
     <Box>
       {/* Header moved into ReceptionistLayout */}
-      
+
       {/* CSS Animation for pulse effect */}
       <style>
         {`
@@ -400,20 +400,20 @@ const ReceptionistDashboard = () => {
           }
         `}
       </style>
-      
+
       {/* Subtle Loading Progress Bar */}
       <Fade in={isRefreshing}>
-        <Box sx={{ 
-          position: 'fixed', 
-          top: 0, 
-          left: 0, 
-          right: 0, 
+        <Box sx={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
           zIndex: 9999
         }}>
-          <LinearProgress 
-            variant="determinate" 
+          <LinearProgress
+            variant="determinate"
             value={refreshProgress}
-            sx={{ 
+            sx={{
               height: 3,
               '& .MuiLinearProgress-bar': {
                 backgroundColor: 'primary.main'
@@ -424,10 +424,10 @@ const ReceptionistDashboard = () => {
       </Fade>
 
       {/* Enhanced Real-time Status Indicator */}
-      <Box sx={{ 
-        position: 'fixed', 
-        top: 80, 
-        right: 20, 
+      <Box sx={{
+        position: 'fixed',
+        top: 80,
+        right: 20,
         zIndex: 1000,
         background: 'rgba(255,255,255,0.95)',
         padding: '8px 12px',
@@ -439,10 +439,10 @@ const ReceptionistDashboard = () => {
         backdropFilter: 'blur(10px)',
         border: '1px solid rgba(255,255,255,0.2)'
       }}>
-        <Box sx={{ 
-          width: 8, 
-          height: 8, 
-          borderRadius: '50%', 
+        <Box sx={{
+          width: 8,
+          height: 8,
+          borderRadius: '50%',
           bgcolor: isRefreshing ? 'warning.main' : 'success.main',
           animation: isRefreshing ? 'none' : 'pulse 2s infinite'
         }} />
@@ -637,7 +637,7 @@ const ReceptionistDashboard = () => {
               <Typography variant="h6" fontWeight="bold" sx={{ mb: 3 }}>
                 Quick Actions
               </Typography>
-              
+
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <Button
                   variant="contained"
@@ -648,7 +648,7 @@ const ReceptionistDashboard = () => {
                 >
                   Register New Patient
                 </Button>
-                
+
                 <Button
                   variant="outlined"
                   startIcon={<ScheduleIcon />}
@@ -658,7 +658,7 @@ const ReceptionistDashboard = () => {
                 >
                   Book Appointment
                 </Button>
-                
+
                 <Button
                   variant="outlined"
                   startIcon={isRefreshing ? <CircularProgress size={16} /> : <RefreshIcon />}
@@ -700,7 +700,7 @@ const ReceptionistDashboard = () => {
                 fullWidth
                 label="First Name"
                 value={patientForm.first_name}
-                onChange={(e) => setPatientForm({...patientForm, first_name: e.target.value})}
+                onChange={(e) => setPatientForm({ ...patientForm, first_name: e.target.value })}
                 required
               />
             </Grid>
@@ -709,7 +709,7 @@ const ReceptionistDashboard = () => {
                 fullWidth
                 label="Last Name"
                 value={patientForm.last_name}
-                onChange={(e) => setPatientForm({...patientForm, last_name: e.target.value})}
+                onChange={(e) => setPatientForm({ ...patientForm, last_name: e.target.value })}
                 required
               />
             </Grid>
@@ -719,7 +719,7 @@ const ReceptionistDashboard = () => {
                 label="Date of Birth"
                 type="date"
                 value={patientForm.date_of_birth}
-                onChange={(e) => setPatientForm({...patientForm, date_of_birth: e.target.value})}
+                onChange={(e) => setPatientForm({ ...patientForm, date_of_birth: e.target.value })}
                 InputLabelProps={{ shrink: true }}
                 required
               />
@@ -729,7 +729,7 @@ const ReceptionistDashboard = () => {
                 <InputLabel>Gender</InputLabel>
                 <Select
                   value={patientForm.gender}
-                  onChange={(e) => setPatientForm({...patientForm, gender: e.target.value})}
+                  onChange={(e) => setPatientForm({ ...patientForm, gender: e.target.value })}
                   label="Gender"
                 >
                   <MenuItem value="M">Male</MenuItem>
@@ -743,7 +743,7 @@ const ReceptionistDashboard = () => {
                 fullWidth
                 label="Phone Number"
                 value={patientForm.phone}
-                onChange={(e) => setPatientForm({...patientForm, phone: e.target.value.slice(0, 15)})}
+                onChange={(e) => setPatientForm({ ...patientForm, phone: e.target.value.slice(0, 15) })}
                 required
               />
             </Grid>
@@ -753,7 +753,7 @@ const ReceptionistDashboard = () => {
                 label="Email"
                 type="email"
                 value={patientForm.email}
-                onChange={(e) => setPatientForm({...patientForm, email: e.target.value})}
+                onChange={(e) => setPatientForm({ ...patientForm, email: e.target.value })}
               />
             </Grid>
             <Grid item xs={12}>
@@ -763,7 +763,7 @@ const ReceptionistDashboard = () => {
                 multiline
                 rows={2}
                 value={patientForm.address}
-                onChange={(e) => setPatientForm({...patientForm, address: e.target.value})}
+                onChange={(e) => setPatientForm({ ...patientForm, address: e.target.value })}
                 required
               />
             </Grid>
@@ -772,7 +772,7 @@ const ReceptionistDashboard = () => {
                 fullWidth
                 label="Emergency Contact"
                 value={patientForm.emergency_contact}
-                onChange={(e) => setPatientForm({...patientForm, emergency_contact: e.target.value})}
+                onChange={(e) => setPatientForm({ ...patientForm, emergency_contact: e.target.value })}
               />
             </Grid>
             <Grid item xs={12}>
@@ -782,24 +782,24 @@ const ReceptionistDashboard = () => {
                 multiline
                 rows={3}
                 value={patientForm.medical_history}
-                onChange={(e) => setPatientForm({...patientForm, medical_history: e.target.value})}
+                onChange={(e) => setPatientForm({ ...patientForm, medical_history: e.target.value })}
                 placeholder="Any relevant medical history, allergies, or conditions..."
               />
             </Grid>
-            
+
             {/* Medical Information Section */}
             <Grid item xs={12}>
               <Typography variant="h6" sx={{ mt: 3, mb: 2, color: 'primary.main', fontWeight: 600 }}>
                 Medical Information
               </Typography>
             </Grid>
-            
+
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
                 <InputLabel>Blood Group</InputLabel>
                 <Select
                   value={patientForm.blood_group}
-                  onChange={(e) => setPatientForm({...patientForm, blood_group: e.target.value})}
+                  onChange={(e) => setPatientForm({ ...patientForm, blood_group: e.target.value })}
                   label="Blood Group"
                 >
                   <MenuItem value="">Select Blood Group</MenuItem>
@@ -814,60 +814,60 @@ const ReceptionistDashboard = () => {
                 </Select>
               </FormControl>
             </Grid>
-            
+
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
                 label="Kidney Function"
                 value={patientForm.kidney_function}
-                onChange={(e) => setPatientForm({...patientForm, kidney_function: e.target.value})}
+                onChange={(e) => setPatientForm({ ...patientForm, kidney_function: e.target.value })}
                 placeholder="e.g., Normal, Mild impairment, Severe impairment"
               />
             </Grid>
-            
+
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
                 label="Liver Function"
                 value={patientForm.liver_function}
-                onChange={(e) => setPatientForm({...patientForm, liver_function: e.target.value})}
+                onChange={(e) => setPatientForm({ ...patientForm, liver_function: e.target.value })}
                 placeholder="e.g., Normal, Mild impairment, Severe impairment"
               />
             </Grid>
-            
+
             {/* Physical Measurements Section */}
             <Grid item xs={12}>
               <Typography variant="h6" sx={{ mt: 3, mb: 2, color: 'primary.main', fontWeight: 600 }}>
                 Physical Measurements
               </Typography>
             </Grid>
-            
+
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
                 label="Weight (kg)"
                 type="number"
                 value={patientForm.weight}
-                onChange={(e) => setPatientForm({...patientForm, weight: e.target.value})}
+                onChange={(e) => setPatientForm({ ...patientForm, weight: e.target.value })}
                 inputProps={{ step: 0.1, min: 0, max: 500 }}
                 placeholder="e.g., 70.5"
                 helperText="Weight in kilograms"
               />
             </Grid>
-            
+
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
                 label="Height (cm)"
                 type="number"
                 value={patientForm.height}
-                onChange={(e) => setPatientForm({...patientForm, height: e.target.value})}
+                onChange={(e) => setPatientForm({ ...patientForm, height: e.target.value })}
                 inputProps={{ step: 0.1, min: 0, max: 300 }}
                 placeholder="e.g., 175.0"
                 helperText="Height in centimeters"
               />
             </Grid>
-            
+
             {/* BMI Calculation Display */}
             {patientForm.height && patientForm.weight && (
               <Grid item xs={12}>
@@ -888,14 +888,14 @@ const ReceptionistDashboard = () => {
                 </Alert>
               </Grid>
             )}
-            
+
             {/* Pregnancy/Breastfeeding Status Section */}
             <Grid item xs={12}>
               <Typography variant="h6" sx={{ mt: 3, mb: 2, color: 'primary.main', fontWeight: 600 }}>
                 Pregnancy & Breastfeeding Status
               </Typography>
             </Grid>
-            
+
             <Grid item xs={12} sm={6}>
               <FormControl component="fieldset">
                 <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>
@@ -903,7 +903,7 @@ const ReceptionistDashboard = () => {
                 </Typography>
                 <Select
                   value={patientForm.pregnancy_status}
-                  onChange={(e) => setPatientForm({...patientForm, pregnancy_status: e.target.value === 'true'})}
+                  onChange={(e) => setPatientForm({ ...patientForm, pregnancy_status: e.target.value === 'true' })}
                   label="Pregnancy Status"
                 >
                   <MenuItem value={false}>No</MenuItem>
@@ -911,7 +911,7 @@ const ReceptionistDashboard = () => {
                 </Select>
               </FormControl>
             </Grid>
-            
+
             <Grid item xs={12} sm={6}>
               <FormControl component="fieldset">
                 <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>
@@ -919,7 +919,7 @@ const ReceptionistDashboard = () => {
                 </Typography>
                 <Select
                   value={patientForm.breastfeeding}
-                  onChange={(e) => setPatientForm({...patientForm, breastfeeding: e.target.value === 'true'})}
+                  onChange={(e) => setPatientForm({ ...patientForm, breastfeeding: e.target.value === 'true' })}
                   label="Breastfeeding Status"
                 >
                   <MenuItem value={false}>No</MenuItem>
@@ -948,7 +948,7 @@ const ReceptionistDashboard = () => {
                 getOptionLabel={(option) => `${option.first_name} ${option.last_name}`}
                 value={patients.find(p => p.id === appointmentForm.patient) || null}
                 onChange={(event, newValue) => {
-                  setAppointmentForm({...appointmentForm, patient: newValue ? newValue.id : ''});
+                  setAppointmentForm({ ...appointmentForm, patient: newValue ? newValue.id : '' });
                 }}
                 renderInput={(params) => (
                   <TextField
@@ -985,8 +985,8 @@ const ReceptionistDashboard = () => {
                 <Select
                   value={appointmentForm.doctor}
                   onChange={(e) => {
-                    setAppointmentForm({...appointmentForm, doctor: e.target.value});
-                    try { localStorage.setItem('preferredDoctorId', String(e.target.value)); } catch (_) {}
+                    setAppointmentForm({ ...appointmentForm, doctor: e.target.value });
+                    try { localStorage.setItem('preferredDoctorId', String(e.target.value)); } catch (_) { }
                   }}
                   label="Doctor"
                 >
@@ -1007,9 +1007,9 @@ const ReceptionistDashboard = () => {
                 label="Scheduled Time"
                 type="datetime-local"
                 value={appointmentForm.scheduled_time}
-                onChange={(e) => setAppointmentForm({...appointmentForm, scheduled_time: e.target.value})}
+                onChange={(e) => setAppointmentForm({ ...appointmentForm, scheduled_time: e.target.value })}
                 InputLabelProps={{ shrink: true }}
-                inputProps={{ 
+                inputProps={{
                   min: dayjs().format('YYYY-MM-DDTHH:mm'),
                   step: 900 // 15-minute intervals
                 }}
@@ -1032,7 +1032,7 @@ const ReceptionistDashboard = () => {
                 <InputLabel>Appointment Type</InputLabel>
                 <Select
                   value={appointmentForm.appointment_type}
-                  onChange={(e) => setAppointmentForm({...appointmentForm, appointment_type: e.target.value})}
+                  onChange={(e) => setAppointmentForm({ ...appointmentForm, appointment_type: e.target.value })}
                   label="Appointment Type"
                 >
                   <MenuItem value="normal">Normal Consultation</MenuItem>
@@ -1047,7 +1047,7 @@ const ReceptionistDashboard = () => {
                 <InputLabel>Priority</InputLabel>
                 <Select
                   value={appointmentForm.priority}
-                  onChange={(e) => setAppointmentForm({...appointmentForm, priority: e.target.value})}
+                  onChange={(e) => setAppointmentForm({ ...appointmentForm, priority: e.target.value })}
                   label="Priority"
                 >
                   <MenuItem value={1}>Emergency</MenuItem>
@@ -1064,7 +1064,7 @@ const ReceptionistDashboard = () => {
                 multiline
                 rows={3}
                 value={appointmentForm.reason}
-                onChange={(e) => setAppointmentForm({...appointmentForm, reason: e.target.value})}
+                onChange={(e) => setAppointmentForm({ ...appointmentForm, reason: e.target.value })}
                 placeholder="Describe the reason for the appointment..."
                 required
               />

@@ -24,18 +24,18 @@ const ReceptionDashboard = ({ onRefresh, showToast }) => {
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  
+
   // Dialog states
   const [appointmentDialog, setAppointmentDialog] = useState(false);
   const [patientDialog, setPatientDialog] = useState(false);
   const [editingAppointment, setEditingAppointment] = useState(null);
-  
+
   // Form states
   const [appointmentForm, setAppointmentForm] = useState(() => {
     // Set default time to 1 hour from now
     const defaultTime = new Date();
     defaultTime.setHours(defaultTime.getHours() + 1);
-    
+
     return {
       patient: '',
       doctor: '',
@@ -45,7 +45,7 @@ const ReceptionDashboard = ({ onRefresh, showToast }) => {
       priority: 3
     };
   });
-  
+
   const [patientForm, setPatientForm] = useState({
     first_name: '',
     last_name: '',
@@ -68,14 +68,14 @@ const ReceptionDashboard = ({ onRefresh, showToast }) => {
         patientsAPI.getAll(),
         authAPI.getProfile() // This will get current user, we'll use all users as doctors for now
       ]);
-      
+
       setAppointments(appointmentsRes.data.results || appointmentsRes.data);
       setPatients(patientsRes.data.results || patientsRes.data);
-      
+
       // Get all users as potential doctors (in a real app, you'd have a separate doctors API)
       // For now, we'll fetch users from the backend
       try {
-        const usersResponse = await fetch('http://localhost:8000/api/users/', {
+        const usersResponse = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8000/api'}/users/`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
             'Content-Type': 'application/json'
@@ -101,7 +101,7 @@ const ReceptionDashboard = ({ onRefresh, showToast }) => {
           { id: 3, first_name: 'Dr. Michael', last_name: 'Brown', email: 'michael@clinic.com' }
         ]);
       }
-      
+
       setError('');
     } catch (err) {
       console.error('Error fetching data:', err);
@@ -134,14 +134,14 @@ const ReceptionDashboard = ({ onRefresh, showToast }) => {
         priority: parseInt(appointmentForm.priority),
         scheduled_time: selectedTime.toISOString()
       };
-      
+
       console.log('Creating appointment with data:', appointmentData);
       console.log('API endpoint:', '/clinic/appointments/');
       console.log('Auth token:', localStorage.getItem('authToken') ? 'Present' : 'Missing');
-      
+
       const response = await clinicAPI.createAppointment(appointmentData);
       console.log('Appointment created successfully:', response.data);
-      
+
       showToast('Appointment created successfully!', 'success');
       setAppointmentDialog(false);
       resetAppointmentForm();
@@ -153,7 +153,7 @@ const ReceptionDashboard = ({ onRefresh, showToast }) => {
       console.error('Error status:', err.response?.status);
       console.error('Error data:', err.response?.data);
       console.error('Full error details:', JSON.stringify(err.response?.data, null, 2));
-      
+
       // Handle different types of errors
       let errorMessage = 'Failed to create appointment';
       if (err.response?.data) {
@@ -174,7 +174,7 @@ const ReceptionDashboard = ({ onRefresh, showToast }) => {
           errorMessage = errors.join('; ');
         }
       }
-      
+
       showToast(errorMessage, 'error');
     }
   };
@@ -190,7 +190,7 @@ const ReceptionDashboard = ({ onRefresh, showToast }) => {
       console.log('Creating patient with data:', patientForm);
       const response = await patientsAPI.create(patientForm);
       console.log('Patient created successfully:', response.data);
-      
+
       showToast('Patient created successfully!', 'success');
       setPatientDialog(false);
       resetPatientForm();
@@ -206,7 +206,7 @@ const ReceptionDashboard = ({ onRefresh, showToast }) => {
     // Set default time to 1 hour from now
     const defaultTime = new Date();
     defaultTime.setHours(defaultTime.getHours() + 1);
-    
+
     setAppointmentForm({
       patient: '',
       doctor: '',
@@ -296,7 +296,7 @@ const ReceptionDashboard = ({ onRefresh, showToast }) => {
             </Button>
           </Box>
         </Box>
-        
+
         <Typography variant="body1" color="text.secondary">
           Manage patient registrations and appointment bookings for today
         </Typography>
@@ -309,7 +309,7 @@ const ReceptionDashboard = ({ onRefresh, showToast }) => {
             Today's Appointments ({appointments.length})
           </Typography>
         </Box>
-        
+
         <TableContainer>
           <Table>
             <TableHead>
