@@ -111,8 +111,11 @@ class SimpleAISuggestionService:
                 allergy_conflicts__in=patient.patient_allergies.values_list('allergy', flat=True)
             )
             
-            if not drugs.exists() or not self.vectorizer:
+            if not drugs.exists():
                 return []
+
+            if self.vectorizer is None:
+                self.vectorizer = TfidfVectorizer(max_features=1000, stop_words='english', ngram_range=(1, 2))
             
             # Create drug descriptions for TF-IDF
             drug_descriptions = []
@@ -135,7 +138,7 @@ class SimpleAISuggestionService:
             
             suggestions = []
             for idx in top_indices:
-                if similarities[idx] > 0.1:  # Minimum similarity threshold
+                if similarities[idx] > 0.01:  # Lower similarity threshold
                     drug = drug_data[idx]
                     suggestions.append({
                         'drug': drug,
@@ -144,7 +147,24 @@ class SimpleAISuggestionService:
                         'reasoning': f"Similar to condition based on drug description"
                     })
             
-            return suggestions
+            # Fallback to pure keyword matching
+            if not suggestions:
+                condition_lower = condition.lower()
+                for drug in drug_data:
+                    search_text = f"{drug.name} {drug.generic_name} {drug.category} {drug.therapeutic_class or ''}".lower()
+                    if condition_lower in search_text:
+                        suggestions.append({
+                            'drug': drug,
+                            'similarity_score': 0.5,
+                            'method': 'keyword_based',
+                            'reasoning': f"Matched condition '{condition}' by keyword"
+                        })
+                        if len(suggestions) >= max_suggestions:
+                            break
+            
+            # Sort by similarity
+            suggestions = sorted(suggestions, key=lambda x: x['similarity_score'], reverse=True)
+            return suggestions[:max_suggestions]
             
         except Exception as e:
             logger.error(f"Error in content-based filtering: {e}")

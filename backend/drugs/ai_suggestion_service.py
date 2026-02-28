@@ -310,34 +310,37 @@ class AISuggestionService:
                 drug_data.append(drug)
             
             # Vectorize drug descriptions
-            if self.vectorizer:
-                drug_vectors = self.vectorizer.fit_transform(drug_descriptions)
-                condition_vector = self.vectorizer.transform([condition_expanded])
+            # Vectorize drug descriptions
+            if self.vectorizer is None:
+                self.vectorizer = TfidfVectorizer(stop_words='english', max_features=1000)
                 
-                # Calculate similarities
-                similarities = cosine_similarity(condition_vector, drug_vectors).flatten()
-                
-                # Get top suggestions
-                top_indices = np.argsort(similarities)[::-1][:max_suggestions]
-                
-                suggestions = []
-                for idx in top_indices:
-                    if similarities[idx] > 0.01:  # Lower similarity threshold
-                        drug = drug_data[idx]
-                        # Add condition-specific reasoning
-                        reasoning = self._get_condition_specific_reasoning(condition, drug)
-                        suggestions.append({
-                            'drug': drug,
-                            'similarity_score': float(similarities[idx]),
-                            'method': 'content_based',
-                            'reasoning': reasoning
-                        })
-                
-                # If no suggestions found with TF-IDF, try keyword matching
-                if not suggestions:
-                    suggestions = self._keyword_based_filtering(condition_expanded, drug_data, max_suggestions)
-                
-                return suggestions
+            drug_vectors = self.vectorizer.fit_transform(drug_descriptions)
+            condition_vector = self.vectorizer.transform([condition_expanded])
+            
+            # Calculate similarities
+            similarities = cosine_similarity(condition_vector, drug_vectors).flatten()
+            
+            # Get top suggestions
+            top_indices = np.argsort(similarities)[::-1][:max_suggestions]
+            
+            suggestions = []
+            for idx in top_indices:
+                if similarities[idx] > 0.01:  # Lower similarity threshold
+                    drug = drug_data[idx]
+                    # Add condition-specific reasoning
+                    reasoning = self._get_condition_specific_reasoning(condition, drug)
+                    suggestions.append({
+                        'drug': drug,
+                        'similarity_score': float(similarities[idx]),
+                        'method': 'content_based',
+                        'reasoning': reasoning
+                    })
+            
+            # If no suggestions found with TF-IDF, try keyword matching
+            if not suggestions:
+                suggestions = self._keyword_based_filtering(condition_expanded, drug_data, max_suggestions)
+            
+            return suggestions
             
         except Exception as e:
             logger.error(f"Error in content-based filtering: {e}")
@@ -990,7 +993,7 @@ class AISuggestionService:
             
             # Use K-means to find similar patients
             n_clusters = min(3, len(patient_features))
-            kmeans = KMeans(n_clusters=n_clusters, random_state=42)
+            kmeans = KMeans(n_clusters=n_clusters, random_state=42, n_init='auto')
             clusters = kmeans.fit_predict(patient_features)
             current_cluster = kmeans.predict(current_features)[0]
             
